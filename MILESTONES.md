@@ -10,7 +10,7 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] `bun run dev` verified: server on :3000, web on :3001, `/rpc/healthCheck` returns `OK`
 - [x] Stock sign-up/sign-in verified in-browser (dashboard loads, protected `privateData` RPC call succeeds)
 - [x] `MILESTONES.md` added
-- [ ] First commit
+- [x] First commit
 
 > Note: `bun run up`/`status`/`down` assume Docker for Postgres and will try to start a container even though a local Postgres is already running on 5432. Either start Docker Desktop before using those scripts, or keep using `bun run dev` directly (what M0 verified) with the local Postgres service (`brew services start postgresql@18`).
 
