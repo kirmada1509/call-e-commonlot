@@ -1,0 +1,70 @@
+name: krishna-starter-kit
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      secrets:
+        - web_env
+        - server_env
+      args:
+        NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+    init: true
+    ports:
+      - "3001:3001"
+    env_file:
+      - path: apps/web/.env
+        required: false
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3001/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18
+    container_name: krishna-starter-kit-postgres
+    environment:
+      POSTGRES_DB: krishna-starter-kit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - krishna-starter-kit_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: krishna-starter-kit-dozzle
+    environment:
+      DOZZLE_FILTER: label=com.docker.compose.project=krishna-starter-kit
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+volumes:
+  krishna-starter-kit_postgres_data:
+
+# BuildKit makes these available only while install/build commands run.
+secrets:
+  web_env:
+    file: apps/web/.env
+  server_env:
+    file: apps/server/.env

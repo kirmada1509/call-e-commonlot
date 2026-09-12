@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "bunVersion": "1.x",
+  "services": {
+    "server": {
+      "root": "apps/server",
+      "framework": "elysia",
+      "entrypoint": "src/index.ts",
+      "installCommand": "cd ../.. && bun install"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    }
+  ]
+}

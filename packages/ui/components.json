@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-lyra",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@krishna-starter-kit/ui/components",
+    "utils": "@krishna-starter-kit/ui/lib/utils",
+    "hooks": "@krishna-starter-kit/ui/hooks",
+    "lib": "@krishna-starter-kit/ui/lib",
+    "ui": "@krishna-starter-kit/ui/components"
+  },
+  "menuColor": "default",
+  "menuAccent": "subtle",
+  "registries": {}
+}

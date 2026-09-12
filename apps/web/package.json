@@ -1,0 +1,47 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b ../../packages/api && next build",
+    "check-types": "tsc -b ../../packages/api && tsc --noEmit",
+    "dev": "next dev --port 3001",
+    "env:generate": "varlock codegen",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^4.0.96",
+    "@krishna-starter-kit/api": "workspace:*",
+    "@krishna-starter-kit/ui": "workspace:*",
+    "@orpc/client": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/tanstack-query": "^1.15.0",
+    "@swc/helpers": "^0.5.23",
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.102.8",
+    "@varlock/nextjs-integration": "1.2.2",
+    "ai": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "better-auth": "catalog:",
+    "evlog": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "^16.3.4",
+    "next-themes": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sonner": "catalog:",
+    "streamdown": "^2.6.0",
+    "varlock": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@krishna-starter-kit/config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
+    "@tanstack/react-query-devtools": "^5.102.8",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

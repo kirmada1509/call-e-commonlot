@@ -1,0 +1,6 @@
+{
+  "extends": "@krishna-starter-kit/config/tsconfig.base.json",
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+}

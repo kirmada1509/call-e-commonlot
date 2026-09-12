@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "files": {
+    // Teaching snippets for the elysiajs skill — intentionally minimal,
+    // not meant to satisfy production lint rules.
+    "includes": ["!.agents/skills/**/examples"]
+  },
+  "linter": {
+    "rules": {
+      "performance": {
+        // Most components in this starter kit render a handful of times
+        // (auth forms, one-off UI primitives); wrapping every inline
+        // handler in useCallback adds boilerplate without a measurable
+        // perf benefit here.
+        "noJsxPropsBind": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      // These are shadcn/ui registry primitives kept close to shadcn's
+      // canonical markup (role="group" wrapper, click-to-focus addon,
+      // generic label) so they stay resyncable with `shadcn add`.
+      "includes": [
+        "packages/ui/src/components/input-group.tsx",
+        "packages/ui/src/components/label.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off",
+            "noNoninteractiveElementInteractions": "off",
+            "useKeyWithClickEvents": "off",
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ]
+}
