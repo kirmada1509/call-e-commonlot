@@ -66,6 +66,7 @@
     "logs:ui": "docker compose up -d dozzle",
     "restart": "bash scripts/restart.sh",
     "status": "bash scripts/status.sh",
+    "test": "turbo run test",
     "up": "bash scripts/start.sh"
   },
   "overrides": {

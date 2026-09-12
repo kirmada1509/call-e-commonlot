@@ -20,8 +20,8 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] Seed script for the doc's 3-buyer/1-supplier bag-carton scenario (`bun run db:seed` in `packages/db`, requires an already-registered organizer email as arg)
 
 ## M2 — Feasibility engine
-- [ ] `resolveTier` / `evaluateProposal` / `diffProposals` pure module
-- [ ] Unit tests: 30-carton threshold met, C 8→6 shortfall, A 12→14 reconfirmation-required case (doc's exact numbers)
+- [x] `resolveTier` / `evaluateProposal` / `diffProposals` pure module (`packages/core`)
+- [x] Unit tests: 30-carton threshold met, C 8→6 shortfall, A 12→14 reconfirmation-required case (doc's exact numbers) — 7/7 passing via `bun run test`
 
 ## M3 — oRPC routers
 - [ ] Protected CRUD for groups/buyers/suppliers/rounds

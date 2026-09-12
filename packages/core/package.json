@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/api",
+  "name": "@krishna-starter-kit/core",
   "type": "module",
   "exports": {
     ".": {
@@ -14,17 +14,7 @@
   "scripts": {
     "build": "tsc -b",
     "check-types": "tsc -b",
-    "dev": "tsc -b --watch"
-  },
-  "dependencies": {
-    "@krishna-starter-kit/auth": "workspace:*",
-    "@krishna-starter-kit/core": "workspace:*",
-    "@krishna-starter-kit/db": "workspace:*",
-    "@orpc/client": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "zod": "catalog:"
+    "test": "bun test"
   },
   "devDependencies": {
     "@krishna-starter-kit/config": "workspace:*",

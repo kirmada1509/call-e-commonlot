@@ -96,6 +96,7 @@
       "name": "@krishna-starter-kit/api",
       "dependencies": {
         "@krishna-starter-kit/auth": "workspace:*",
+        "@krishna-starter-kit/core": "workspace:*",
         "@krishna-starter-kit/db": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/openapi": "catalog:",
@@ -123,6 +124,13 @@
     "packages/config": {
       "name": "@krishna-starter-kit/config",
       "version": "0.0.0",
+    },
+    "packages/core": {
+      "name": "@krishna-starter-kit/core",
+      "devDependencies": {
+        "@krishna-starter-kit/config": "workspace:*",
+        "typescript": "catalog:",
+      },
     },
     "packages/db": {
       "name": "@krishna-starter-kit/db",
@@ -497,6 +505,8 @@
     "@krishna-starter-kit/auth": ["@krishna-starter-kit/auth@workspace:packages/auth"],
 
     "@krishna-starter-kit/config": ["@krishna-starter-kit/config@workspace:packages/config"],
+
+    "@krishna-starter-kit/core": ["@krishna-starter-kit/core@workspace:packages/core"],
 
     "@krishna-starter-kit/db": ["@krishna-starter-kit/db@workspace:packages/db"],
 
