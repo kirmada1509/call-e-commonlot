@@ -42,10 +42,10 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] Round detail screen (`/rounds/[roundId]`): buyer/supplier cards with inline call-trigger forms (dry-run by default, real-call opt-in), proposal panel with feasibility badge/shortfall/savings, confirmation tracker with per-buyer "Confirm new total", activity log tagged LIVE/SIMULATED with expandable transcripts, manual order-status stepper — verified end-to-end in-browser: placed a dry-run call through the actual form (not raw RPC), watched the proposal recompute live, confirmed all three reconfirmation-required line items through the UI and watched status flip to `ready_for_review`
 
 ## M6 — Demo scenario & harness
-- [ ] In-app seed matching the doc's worked example
-- [ ] Scripted "C: 8→6, A: 12→14" revision storyline
-- [ ] Live/recorded/simulated labeling on the audit log
-- [ ] Full dry-run walkthrough without spending real calls
+- [x] In-app seed matching the doc's worked example, made resettable (`bun run src/seed.ts <email>` in `packages/db` now wipes any prior demo group/supplier for that organizer first — safe to re-run before recording) and changed to seed only entities, not pre-filled requests/offer, so the proposal is genuinely assembled from calls placed through the app rather than starting pre-computed
+- [x] Scripted "C: 8→6, A: 12→14" revision storyline — written up shot-by-shot in [DEMO_SCRIPT.md](DEMO_SCRIPT.md), matched to the research doc's video shot list
+- [x] Live/recorded/simulated labeling on the audit log — the call-activity badge now distinguishes LIVE (real call still in flight), RECORDED (real call, terminal state — a genuine past event being reviewed), and SIMULATED (dry-run), not just real-vs-simulated
+- [x] Full dry-run walkthrough verified end-to-end against a freshly reset seed, live in the browser, through the actual oRPC calls the UI forms submit: pristine state → 3 buyer intakes + 1 supplier quote → ready_for_review at ₹28,500/₹7,500 savings (doc's exact figures) → C drops to 6 → infeasible/shortfall 2 (doc's exact figure) → A raises to 14 at an unchanged cap → infeasible on A's cap → A reconfirms with a raised cap → ready_for_review again at the same ₹28,500/₹7,500 — reset back to pristine afterward
 
 ## M7 — Deploy & submission
 - [ ] Deploy web + server + managed Postgres

@@ -60,24 +60,41 @@ const orderStatusLabel: Record<string, string> = {
   proposal_ready: "Proposal ready",
 };
 
+// The doc requires distinguishing a live result, a recorded real result,
+// and a simulation. A "real" call is LIVE while still in flight and
+// RECORDED once it reaches a terminal state (the transcript/result being
+// reviewed is a genuine past CALL-E event, not something happening now).
+// A "simulated" (dry-run) call is never LIVE or RECORDED.
+function callEvidenceLabel(call: Call): "LIVE" | "RECORDED" | "SIMULATED" {
+  if (call.mode !== "real") {
+    return "SIMULATED";
+  }
+  return call.status === "queued" || call.status === "in_progress"
+    ? "LIVE"
+    : "RECORDED";
+}
+
+const evidenceLabelStyle: Record<string, string> = {
+  LIVE: "bg-green-100 text-green-900",
+  RECORDED: "bg-blue-100 text-blue-900",
+  SIMULATED: "bg-slate-100 text-slate-700",
+};
+
 function CallActivityItem({ call }: { call: Call }) {
   const [showTranscript, setShowTranscript] = useState(false);
   const transcript = (call.transcript ?? []) as Array<{
     speaker: string;
     text: string;
   }>;
+  const evidenceLabel = callEvidenceLabel(call);
 
   return (
     <li className="space-y-1 border-b py-2 text-xs last:border-b-0">
       <div className="flex flex-wrap items-center gap-2">
         <span
-          className={`px-1.5 py-0.5 font-medium ${
-            call.mode === "real"
-              ? "bg-blue-100 text-blue-900"
-              : "bg-slate-100 text-slate-700"
-          }`}
+          className={`px-1.5 py-0.5 font-medium ${evidenceLabelStyle[evidenceLabel]}`}
         >
-          {call.mode === "real" ? "LIVE" : "SIMULATED"}
+          {evidenceLabel}
         </span>
         <span className="font-medium">{call.purpose}</span>
         <span className="text-muted-foreground">{call.status}</span>

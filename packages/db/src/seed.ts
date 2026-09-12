@@ -1,17 +1,29 @@
 import "varlock/auto-load";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { createDb } from "./index";
 import { buyer, group, purchaseRound, supplier, user } from "./schema";
-import { participantRequest, supplierOffer } from "./schema/commonlot";
+
+const DEMO_GROUP_NAME = "Local Bag Co-op";
+const DEMO_SUPPLIER_NAME = "Metro Packaging Supplies";
 
 /**
- * Seeds the exact worked example from call-e-commonlot-research.md: three
- * buyers requesting 12/10/8 cartons at a ₹950 all-in ceiling, and a supplier
- * offering ₹900/carton at a 30-carton threshold plus a ₹50 handling fee.
- * Attaches the demo data to an already-registered organizer (sign up via the
- * web app first) so it shows up on login.
+ * Resets and reseeds the entities for the research doc's worked example:
+ * three buyers (12/10/8 cartons requested, ₹950 all-in ceiling each) and a
+ * supplier that offers ₹900/carton at a 30-carton threshold, ₹50/carton
+ * handling fee, ₹1,200/carton baseline for the savings comparison.
+ *
+ * Deliberately does NOT pre-populate participant requests or the supplier
+ * offer — those are meant to come from calls (dry-run or real) placed
+ * through the app, per DEMO_SCRIPT.md, so the demo shows the proposal
+ * actually being assembled from call results rather than starting
+ * pre-filled. Re-running this script wipes any prior demo group/supplier
+ * for the organizer first, so it's safe to use as a "reset before
+ * recording" step.
+ *
+ * Attaches the demo data to an already-registered organizer (sign up via
+ * the web app first) so it shows up on login.
  *
  * Usage: bun run src/seed.ts <organizer-email>
  */
@@ -40,9 +52,23 @@ if (!organizer) {
   );
 }
 
+await db
+  .delete(group)
+  .where(
+    and(eq(group.organizerId, organizer.id), eq(group.name, DEMO_GROUP_NAME))
+  );
+await db
+  .delete(supplier)
+  .where(
+    and(
+      eq(supplier.organizerId, organizer.id),
+      eq(supplier.name, DEMO_SUPPLIER_NAME)
+    )
+  );
+
 const [demoGroup] = await db
   .insert(group)
-  .values({ name: "Local Bag Co-op", organizerId: organizer.id })
+  .values({ name: DEMO_GROUP_NAME, organizerId: organizer.id })
   .returning();
 if (!demoGroup) {
   throw new Error("Failed to insert demo group");
@@ -51,7 +77,7 @@ if (!demoGroup) {
 const [demoSupplier] = await db
   .insert(supplier)
   .values({
-    name: "Metro Packaging Supplies",
+    name: DEMO_SUPPLIER_NAME,
     organizerId: organizer.id,
     phone: "+910000000000",
   })
@@ -61,9 +87,9 @@ if (!demoSupplier) {
 }
 
 const buyerSeeds = [
-  { businessName: "Business A", phone: "+910000000001", quantity: 12 },
-  { businessName: "Business B", phone: "+910000000002", quantity: 10 },
-  { businessName: "Business C", phone: "+910000000003", quantity: 8 },
+  { businessName: "Business A", phone: "+910000000001" },
+  { businessName: "Business B", phone: "+910000000002" },
+  { businessName: "Business C", phone: "+910000000003" },
 ];
 
 const insertedBuyers = await db
@@ -94,34 +120,6 @@ if (!round) {
   throw new Error("Failed to insert demo round");
 }
 
-await db.insert(participantRequest).values(
-  insertedBuyers.map((b, i) => {
-    const seed = buyerSeeds[i];
-    if (!seed) {
-      throw new Error(`Missing seed data for inserted buyer ${b.id}`);
-    }
-    return {
-      buyerId: b.id,
-      maxTotal: (seed.quantity * 950).toString(),
-      maxUnitPrice: "950",
-      quantity: seed.quantity,
-      roundId: round.id,
-      source: "manual" as const,
-    };
-  })
-);
-
-await db.insert(supplierOffer).values({
-  collectionWindow: "Weekday pickup, organizer's warehouse",
-  conditions: "One invoice to the organizer; single collection point",
-  roundId: round.id,
-  source: "manual",
-  tiers: [
-    { minQty: 0, pricePerUnit: 1050 },
-    { minQty: 30, pricePerUnit: 900 },
-  ],
-});
-
 console.log(
-  `Seeded round "${round.productName}" (${round.id}) for organizer ${organizerEmail} with ${insertedBuyers.length} buyers and 1 supplier offer.`
+  `Reset and seeded round "${round.productName}" (${round.id}) for organizer ${organizerEmail} with ${insertedBuyers.length} buyers and 1 supplier — no requests/offer yet. Follow DEMO_SCRIPT.md from here.`
 );
