@@ -15,9 +15,9 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 > Note: `bun run up`/`status`/`down` assume Docker for Postgres and will try to start a container even though a local Postgres is already running on 5432. Either start Docker Desktop before using those scripts, or keep using `bun run dev` directly (what M0 verified) with the local Postgres service (`brew services start postgresql@18`).
 
 ## M1 — Domain schema
-- [ ] Drizzle tables: `group`, `buyer`, `supplier`, `purchaseRound`, `participantRequest`, `supplierOffer`, `proposal`, `proposalLineItem`, `call`, `orderStatusEvent`
-- [ ] `db:push` applied
-- [ ] Seed script for the doc's 3-buyer/1-supplier bag-carton scenario
+- [x] Drizzle tables: `group`, `buyer`, `supplier`, `purchaseRound`, `participantRequest`, `supplierOffer`, `proposal`, `proposalLineItem`, `call`, `orderStatusEvent`
+- [x] `db:push` applied (verified via `psql \dt`, 10 `commonlot_*` tables)
+- [x] Seed script for the doc's 3-buyer/1-supplier bag-carton scenario (`bun run db:seed` in `packages/db`, requires an already-registered organizer email as arg)
 
 ## M2 — Feasibility engine
 - [ ] `resolveTier` / `evaluateProposal` / `diffProposals` pure module
