@@ -162,8 +162,8 @@ export interface ReconfirmationDiff {
  * their confirmation of that first version.
  */
 export function diffProposals(
-  prev: ProposalEvaluation | null,
-  next: ProposalEvaluation
+  prev: Pick<ProposalEvaluation, "lineItems"> | null,
+  next: Pick<ProposalEvaluation, "lineItems">
 ): ReconfirmationDiff[] {
   if (!prev) {
     return next.lineItems.map((item) => ({

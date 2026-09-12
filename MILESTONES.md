@@ -24,8 +24,9 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] Unit tests: 30-carton threshold met, C 8→6 shortfall, A 12→14 reconfirmation-required case (doc's exact numbers) — 7/7 passing via `bun run test`
 
 ## M3 — oRPC routers
-- [ ] Protected CRUD for groups/buyers/suppliers/rounds
-- [ ] Round-detail query (latest request/offer/proposal/line-items/calls)
+- [x] Protected CRUD for groups/buyers/suppliers/rounds (create/list + addBuyer; update/delete deferred — not needed for the demo path)
+- [x] Round-detail query (latest request/offer/proposal/line-items/calls/order-status events)
+- [x] Proposal engine wiring (`submitParticipantRequest`/`submitSupplierOffer` version-and-recompute, `confirmLineItem`, `recordOrderStatus`) — verified live against the running dev server: reproduced the doc's exact 30-carton feasible case, C's 8→6 shortfall, A's 12→14 cap violation, A's reconfirmation resolving it, a supplier price revision putting all three buyers into `feasible_unconfirmed`, and per-buyer confirmation flipping the round to `ready_for_review`
 
 ## M4 — CALL-E integration
 - [ ] `packages/calle` wrapper over `@call-e/calle`
