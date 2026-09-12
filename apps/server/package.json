@@ -16,6 +16,7 @@
     "@elysiajs/cors": "^1.4.2",
     "@krishna-starter-kit/api": "workspace:*",
     "@krishna-starter-kit/auth": "workspace:*",
+    "@krishna-starter-kit/calle": "workspace:*",
     "@krishna-starter-kit/db": "workspace:*",
     "@mastra/ai-sdk": "^1.10.2",
     "@mastra/core": "^1.66.0",

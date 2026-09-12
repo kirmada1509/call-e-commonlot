@@ -21,6 +21,11 @@ import {
 } from "../lib/ownership";
 import { requireOrganizerId } from "../lib/session";
 import {
+  reconcilePendingCalls,
+  triggerBuyerCall,
+  triggerSupplierCall,
+} from "../services/calle-integration";
+import {
   confirmProposalLineItem,
   submitParticipantRequest,
   submitSupplierOffer,
@@ -30,6 +35,8 @@ const tierInput = z.object({
   minQty: z.number().int().nonnegative(),
   pricePerUnit: z.number().positive(),
 });
+
+const simulatedResultInput = z.record(z.string(), z.unknown()).optional();
 
 const orderStatusValues = [
   "proposal_ready",
@@ -99,6 +106,8 @@ export const roundsRouter = {
         input.roundId,
         organizerId
       );
+
+      await reconcilePendingCalls(context.db, context.calle, round.id);
 
       const [
         roundGroup,
@@ -222,5 +231,36 @@ export const roundsRouter = {
         ...input,
         source: "manual",
       });
+    }),
+
+  triggerBuyerCall: protectedProcedure
+    .input(
+      z.object({
+        buyerId: z.string(),
+        dryRun: z.boolean().default(false),
+        purpose: z.enum(["buyer_intake", "buyer_reconfirm"]),
+        roundId: z.string(),
+        simulatedResult: simulatedResultInput,
+      })
+    )
+    .handler(async ({ context, input }) => {
+      const organizerId = requireOrganizerId(context);
+      await assertRoundOwnership(context.db, input.roundId, organizerId);
+      return await triggerBuyerCall(context.db, context.calle, input);
+    }),
+
+  triggerSupplierCall: protectedProcedure
+    .input(
+      z.object({
+        dryRun: z.boolean().default(false),
+        purpose: z.enum(["supplier_quote", "supplier_reconfirm"]),
+        roundId: z.string(),
+        simulatedResult: simulatedResultInput,
+      })
+    )
+    .handler(async ({ context, input }) => {
+      const organizerId = requireOrganizerId(context);
+      await assertRoundOwnership(context.db, input.roundId, organizerId);
+      return await triggerSupplierCall(context.db, context.calle, input);
     }),
 };

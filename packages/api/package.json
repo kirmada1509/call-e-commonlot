@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@krishna-starter-kit/auth": "workspace:*",
+    "@krishna-starter-kit/calle": "workspace:*",
     "@krishna-starter-kit/core": "workspace:*",
     "@krishna-starter-kit/db": "workspace:*",
     "@orpc/client": "catalog:",

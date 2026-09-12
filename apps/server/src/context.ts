@@ -1,6 +1,6 @@
 import type { Context as ApiContext } from "@krishna-starter-kit/api/context";
 import type { Context as ElysiaContext } from "elysia";
-import { auth, getDb } from "./services";
+import { auth, calle, getDb } from "./services";
 
 export interface CreateContextOptions {
   context: ElysiaContext;
@@ -15,6 +15,7 @@ export async function createContext({
   });
   return {
     auth: null,
+    calle,
     db,
     session,
   };

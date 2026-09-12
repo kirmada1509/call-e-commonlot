@@ -29,11 +29,12 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] Proposal engine wiring (`submitParticipantRequest`/`submitSupplierOffer` version-and-recompute, `confirmLineItem`, `recordOrderStatus`) — verified live against the running dev server: reproduced the doc's exact 30-carton feasible case, C's 8→6 shortfall, A's 12→14 cap violation, A's reconfirmation resolving it, a supplier price revision putting all three buyers into `feasible_unconfirmed`, and per-buyer confirmation flipping the round to `ready_for_review`
 
 ## M4 — CALL-E integration
-- [ ] `packages/calle` wrapper over `@call-e/calle`
-- [ ] Task templates + `result_schema` per call purpose (buyer_intake, supplier_quote, buyer_reconfirm, supplier_reconfirm)
-- [ ] Non-blocking call trigger + dev polling reconciliation
-- [ ] Write-back into versioned rows + engine recompute
-- [ ] Dry-run mode (no real call spent)
+- [x] `packages/calle` wrapper over `@call-e/calle` (5 unit tests on task-template builders)
+- [x] Task templates + `result_schema` per call purpose (buyer_intake, supplier_quote, buyer_reconfirm, supplier_reconfirm) — numeric answers are strings with an explicit `"unknown"` sentinel, since CALL-E's `result_schema` rejects `oneOf`/`const` (discovered via a live 400 from the real API, not from docs)
+- [x] Non-blocking call trigger (`packages/api/src/services/calle-integration.ts`) + reconciliation on every `rounds.get` fetch (polls CALL-E for any of the round's non-terminal real calls)
+- [x] Write-back into versioned rows + engine recompute — verified live: an "unknown" answer correctly produces **no** write-back (doc's "silence is not treated as demand" requirement), a usable answer flows straight into `submitParticipantRequest`/`submitSupplierOffer` and recomputes the proposal
+- [x] Dry-run mode (`dryRun: true` + `simulatedResult` on the trigger mutations; no CALLE_API_KEY or call spent) — verified live for both buyer and supplier calls
+- [x] **Real CALL-E calls placed and verified**: first attempt to a consenting `+91` number failed with `NO ANSWER` — traced via `/v1/calls/{id}/events` to India lines being restricted on this account (confirmed by CALL-E maintainer on Discord, who provided an official US testing hotline `+1 276-322-9632`); a second real call to that hotline connected, ran a full 17-turn conversation, and correctly recorded all three fields as `"unknown"` when the line couldn't actually place an order — exactly the "missing answer ≠ demand" behavior the design requires
 
 ## M5 — Web UI
 - [ ] Groups & Suppliers pages
