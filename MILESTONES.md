@@ -37,9 +37,9 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [x] **Real CALL-E calls placed and verified**: first attempt to a consenting `+91` number failed with `NO ANSWER` — traced via `/v1/calls/{id}/events` to India lines being restricted on this account (confirmed by CALL-E maintainer on Discord, who provided an official US testing hotline `+1 276-322-9632`); a second real call to that hotline connected, ran a full 17-turn conversation, and correctly recorded all three fields as `"unknown"` when the line couldn't actually place an order — exactly the "missing answer ≠ demand" behavior the design requires
 
 ## M5 — Web UI
-- [ ] Groups & Suppliers pages
-- [ ] New Round wizard
-- [ ] Round detail screen: buyer/supplier cards, proposal panel, confirmation tracker, audit log, order-status stepper
+- [x] Groups & Suppliers pages (`/setup`) — create group, add buyers, create supplier
+- [x] New Round wizard (`/rounds`) — create round + list existing rounds
+- [x] Round detail screen (`/rounds/[roundId]`): buyer/supplier cards with inline call-trigger forms (dry-run by default, real-call opt-in), proposal panel with feasibility badge/shortfall/savings, confirmation tracker with per-buyer "Confirm new total", activity log tagged LIVE/SIMULATED with expandable transcripts, manual order-status stepper — verified end-to-end in-browser: placed a dry-run call through the actual form (not raw RPC), watched the proposal recompute live, confirmed all three reconfirmation-required line items through the UI and watched status flip to `ready_for_review`
 
 ## M6 — Demo scenario & harness
 - [ ] In-app seed matching the doc's worked example
