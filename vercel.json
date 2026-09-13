@@ -5,8 +5,7 @@
     "server": {
       "root": "apps/server",
       "framework": "elysia",
-      "entrypoint": "dist/index.mjs",
-      "buildCommand": "cd ../.. && bun run build --filter=server",
+      "entrypoint": "src/index.ts",
       "installCommand": "cd ../.. && bun install"
     }
   },
