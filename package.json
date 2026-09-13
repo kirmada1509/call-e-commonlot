@@ -61,7 +61,7 @@
     "env:preview": "tsx scripts/sync-vercel-env.ts preview",
     "env:production": "tsx scripts/sync-vercel-env.ts production",
     "fix": "ultracite fix",
-    "postinstall": "tsc -b packages/api && varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./packages/db/",
+    "postinstall": "touch apps/web/.env apps/server/.env packages/db/.env && tsc -b packages/api && varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./packages/db/",
     "logs": "bash scripts/logs.sh",
     "logs:ui": "docker compose up -d dozzle",
     "restart": "bash scripts/restart.sh",
