@@ -12,3 +12,15 @@
 local.db
 local.db-*
 .alchemy/
+
+# Build artifacts are regenerated remotely by each service's buildCommand;
+# shipping local ones (especially apps/web/.next) can blow past Vercel's
+# upload size limit and are never what should run anyway.
+.next/
+**/.next/
+dist/
+**/dist/
+.turbo/
+**/.turbo/
+node_modules/
+**/node_modules/
