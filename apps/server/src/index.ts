@@ -1,12 +1,10 @@
 import { cors } from "@elysiajs/cors";
 import { appRouter } from "@krishna-starter-kit/api/routers/index";
-import { handleChatStream } from "@mastra/ai-sdk";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { createUIMessageStreamResponse, type UIMessage } from "ai";
 import { Elysia } from "elysia";
 import { initLogger } from "evlog";
 import {
@@ -18,7 +16,6 @@ import { createFsDrain } from "evlog/fs";
 
 import { createContext } from "./context";
 import { env } from "./env.server";
-import { mastra } from "./mastra";
 import { auth } from "./services";
 
 const rpcHandler = new RPCHandler(appRouter, {
@@ -103,33 +100,6 @@ const app = new Elysia()
       parse: "none",
     }
   )
-  .post("/ai", async (context) => {
-    const body = (await context.request.json()) as { messages?: UIMessage[] };
-    const uiMessages = body.messages || [];
-
-    const session = await auth.api.getSession({
-      headers: context.request.headers,
-    });
-    const resourceId = session?.user?.id ?? "anonymous";
-    const threadId =
-      context.request.headers.get("x-chat-thread-id") ?? resourceId;
-
-    const stream = await handleChatStream({
-      agentId: "chatAgent",
-      mastra,
-      params: {
-        memory: { resource: resourceId, thread: threadId },
-        // @mastra/ai-sdk vendors its own copy of the AI SDK v5 UIMessage
-        // type; structurally identical to the one from "ai" but not
-        // nominally assignable across the two packages' bundled types.
-        messages: uiMessages as never,
-      },
-      version: "v5",
-    });
-
-    // Same vendored-type mismatch as above, on the way back out.
-    return createUIMessageStreamResponse({ stream: stream as never });
-  })
   .get("/", () => "OK");
 
 export default app;
