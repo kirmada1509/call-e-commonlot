@@ -20,6 +20,8 @@ local.db-*
 **/.next/
 dist/
 **/dist/
+!apps/server/dist/
+!apps/server/dist/index.mjs
 .turbo/
 **/.turbo/
 node_modules/

@@ -8,6 +8,13 @@ dist
 build
 *.tsbuildinfo
 
+# Vercel's "elysia" service preset checks that its configured entrypoint
+# already exists in the checked-out tree before running any build command,
+# so apps/server/dist/index.mjs must be committed (buildCommand still
+# regenerates it fresh on every deploy; this is only to pass that check).
+!apps/server/dist
+!apps/server/dist/index.mjs
+
 # Generated files
 apps/web/src/routeTree.gen.ts
 local.db
