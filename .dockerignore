@@ -19,6 +19,7 @@
 
 Dockerfile
 **/Dockerfile
+!apps/server/Dockerfile
 !apps/web/Dockerfile
 docker-compose.yml
 
