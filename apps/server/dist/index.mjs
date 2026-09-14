@@ -1,8 +1,8 @@
 import { createRequire } from "node:module";
-import { cors } from "@elysiajs/cors";
 import { ORPCError, onError, os } from "@orpc/server";
 import { z } from "zod";
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { cors } from "@elysiajs/cors";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { RPCHandler } from "@orpc/server/fetch";
@@ -5803,6 +5803,110 @@ const orderStatusEventRelations = relations(orderStatusEvent, ({ one }) => ({
 	})
 }));
 //#endregion
+//#region ../../packages/api/src/lib/session.ts
+function requireOrganizerId(context) {
+	const userId = context.session?.user?.id;
+	if (!userId) throw new ORPCError("UNAUTHORIZED");
+	return userId;
+}
+//#endregion
+//#region ../../packages/api/src/services/dashboard-overview.ts
+const callPurposeLabels = {
+	buyer_intake: "Collect buying conditions",
+	buyer_reconfirm: "Reconfirm proposal changes",
+	supplier_quote: "Collect supplier offer",
+	supplier_reconfirm: "Reconfirm supplier terms"
+};
+function getEvidenceMode(mode, status) {
+	if (mode === "simulated") return "SIMULATED";
+	if (status === "completed") return "RECORDED";
+	return "LIVE";
+}
+function buildDashboardOverview({ groups, rounds, suppliers }) {
+	const buyerNames = new Map(groups.flatMap((item) => item.buyers.map((buyer) => [buyer.id, buyer.businessName])));
+	const supplierNames = new Map(suppliers.map((item) => [item.id, item.name]));
+	const roundNames = new Map(rounds.map((item) => [item.id, item.productName]));
+	const summaries = rounds.map((round) => {
+		const latestProposal = round.proposals.toSorted((a, b) => b.version - a.version)[0] ?? null;
+		const confirmationsRequired = latestProposal?.lineItems.filter((item) => item.requiresReconfirmation && !item.confirmed).length ?? 0;
+		return {
+			attentionNeeded: latestProposal?.status === "infeasible" || confirmationsRequired > 0,
+			combinedQty: latestProposal?.combinedQty ?? 0,
+			confirmationsRequired,
+			group: round.group?.name ?? "Unknown group",
+			id: round.id,
+			productName: round.productName,
+			proposalStatus: latestProposal?.status ?? null,
+			quantityTarget: latestProposal?.tierMinQty ?? null,
+			savings: Number(latestProposal?.savings ?? 0),
+			status: round.status,
+			supplier: round.supplier?.name ?? "Unknown supplier",
+			unitLabel: round.unitLabel,
+			updatedAt: round.updatedAt
+		};
+	});
+	const recentCalls = rounds.flatMap((round) => round.calls.map((item) => ({
+		evidenceMode: getEvidenceMode(item.mode, item.status),
+		id: item.id,
+		purpose: callPurposeLabels[item.purpose] ?? item.purpose,
+		roundId: item.roundId,
+		roundName: roundNames.get(item.roundId) ?? "Purchase round",
+		status: item.status,
+		target: item.targetType === "buyer" ? buyerNames.get(item.targetId) ?? "Buyer" : supplierNames.get(item.targetId) ?? "Supplier",
+		timestamp: item.updatedAt
+	}))).toSorted((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, 8);
+	const attentionItems = summaries.filter((item) => item.attentionNeeded).map((item) => ({
+		kind: item.proposalStatus === "infeasible" ? "shortfall" : "reconfirmation",
+		message: item.proposalStatus === "infeasible" ? `${item.productName} has not reached a feasible supplier tier.` : `${item.confirmationsRequired} buyer confirmation${item.confirmationsRequired === 1 ? " is" : "s are"} still needed for ${item.productName}.`,
+		roundId: item.id,
+		timestamp: item.updatedAt
+	}));
+	return {
+		attentionItems,
+		metrics: {
+			activeRoundCount: summaries.filter((item) => item.status === "active").length,
+			attentionNeededCount: attentionItems.length,
+			potentialSavings: summaries.reduce((total, item) => total + Math.max(item.savings, 0), 0),
+			readyForReviewCount: summaries.filter((item) => item.proposalStatus === "ready_for_review").length
+		},
+		onboarding: {
+			buyerComplete: groups.some((item) => item.buyers.length > 0),
+			groupComplete: groups.length > 0,
+			roundComplete: rounds.length > 0,
+			supplierComplete: suppliers.length > 0
+		},
+		recentCalls,
+		rounds: summaries
+	};
+}
+//#endregion
+//#region ../../packages/api/src/routers/dashboard.ts
+const dashboardRouter = { overview: protectedProcedure.handler(async ({ context }) => {
+	const organizerId = requireOrganizerId(context);
+	const [groups, suppliers, rounds] = await Promise.all([
+		context.db.query.group.findMany({
+			where: eq(group.organizerId, organizerId),
+			with: { buyers: true }
+		}),
+		context.db.query.supplier.findMany({ where: eq(supplier.organizerId, organizerId) }),
+		context.db.query.purchaseRound.findMany({
+			orderBy: desc(purchaseRound.updatedAt),
+			where: eq(purchaseRound.organizerId, organizerId),
+			with: {
+				calls: true,
+				group: true,
+				proposals: { with: { lineItems: true } },
+				supplier: true
+			}
+		})
+	]);
+	return buildDashboardOverview({
+		groups,
+		rounds,
+		suppliers
+	});
+}) };
+//#endregion
 //#region ../../packages/api/src/lib/ownership.ts
 async function assertGroupOwnership(db, groupId, organizerId) {
 	const row = await db.query.group.findFirst({ where: eq(group.id, groupId) });
@@ -5818,13 +5922,6 @@ async function assertRoundOwnership(db, roundId, organizerId) {
 	const row = await db.query.purchaseRound.findFirst({ where: eq(purchaseRound.id, roundId) });
 	if (!row || row.organizerId !== organizerId) throw new ORPCError("NOT_FOUND");
 	return row;
-}
-//#endregion
-//#region ../../packages/api/src/lib/session.ts
-function requireOrganizerId(context) {
-	const userId = context.session?.user?.id;
-	if (!userId) throw new ORPCError("UNAUTHORIZED");
-	return userId;
 }
 //#endregion
 //#region ../../packages/api/src/routers/groups.ts
@@ -6907,7 +7004,12 @@ async function recomputeProposal(db, roundId) {
 		where: eq(proposal.roundId, roundId),
 		with: { lineItems: true }
 	});
-	const diffs = diffProposals(previousProposal ? { lineItems: previousProposal.lineItems.map((li) => ({
+	const previousFeasibleProposal = previousProposal?.feasible ? previousProposal : await db.query.proposal.findFirst({
+		orderBy: desc(proposal.version),
+		where: and(eq(proposal.roundId, roundId), eq(proposal.feasible, true)),
+		with: { lineItems: true }
+	});
+	const diffs = diffProposals(previousFeasibleProposal ? { lineItems: previousFeasibleProposal.lineItems.map((li) => ({
 		allInUnitPrice: Number(li.allInUnitPrice),
 		buyerId: li.buyerId,
 		quantity: li.quantity,
@@ -7346,12 +7448,9 @@ const suppliersRouter = {
 //#endregion
 //#region ../../packages/api/src/routers/index.ts
 const appRouter = {
+	dashboard: dashboardRouter,
 	groups: groupsRouter,
 	healthCheck: publicProcedure.handler(() => "OK"),
-	privateData: protectedProcedure.handler(({ context }) => ({
-		message: "This is private",
-		user: context.session?.user
-	})),
 	rounds: roundsRouter,
 	suppliers: suppliersRouter
 };
@@ -12031,7 +12130,7 @@ const apiHandler = new OpenAPIHandler(appRouter, {
 	})],
 	plugins: [new OpenAPIReferencePlugin({ schemaConverters: [new ZodToJsonSchemaConverter()] })]
 });
-initLogger({ env: { service: "krishna-starter-kit-server" } });
+initLogger({ env: { service: "call-e-commonlot-server" } });
 const identifyUser = createAuthMiddleware(auth, {
 	exclude: ["/api/auth/**"],
 	maskEmail: true
@@ -12065,8 +12164,11 @@ const app = new Elysia().use(evlog({ drain: process.env.NODE_ENV === "production
 	});
 	return response ?? new Response("Not Found", { status: 404 });
 }, { parse: "none" }).get("/", () => "OK");
-if (!process.env.VERCEL) app.listen(3e3, () => {
-	console.log("Server is running on http://localhost:3000");
-});
+if (!process.env.VERCEL) {
+	const port = Number(process.env.PORT ?? 3e3);
+	app.listen(port, () => {
+		console.log(`Server is running on http://localhost:${port}`);
+	});
+}
 //#endregion
 export { app as default };

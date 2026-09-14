@@ -1,11 +1,11 @@
 {
-  "extends": "@krishna-starter-kit/config/tsconfig.base.json",
+  "extends": "@call-e-commonlot/config/tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": [],
     "paths": {
-      "@krishna-starter-kit/ui/*": ["./src/*"]
+      "@call-e-commonlot/ui/*": ["./src/*"]
     },
     "strictNullChecks": true
   },

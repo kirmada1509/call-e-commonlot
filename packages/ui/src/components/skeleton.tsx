@@ -1,4 +1,4 @@
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (

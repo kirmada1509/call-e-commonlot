@@ -1,23 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
 
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
-
 export const metadata: Metadata = {
-  description: "krishna-starter-kit",
-  title: "krishna-starter-kit",
+  description:
+    "Assemble feasible shared purchases through clear, private buyer conversations.",
+  title: {
+    default: "CommonLot — Shared purchasing, made workable",
+    template: "%s — CommonLot",
+  },
 };
 
 export default function RootLayout({
@@ -27,14 +20,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <Providers>
-          <div className="grid h-svh grid-rows-[auto_1fr]">
-            <Header />
+          <a
+            className="fixed top-3 left-3 z-[100] -translate-y-20 rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-transform focus:translate-y-0"
+            href="#main-content"
+          >
+            Skip to content
+          </a>
+          <Header />
+          <main className="min-h-svh pt-16" id="main-content">
             {children}
-          </div>
+          </main>
         </Providers>
       </body>
     </html>

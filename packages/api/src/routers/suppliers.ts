@@ -1,4 +1,4 @@
-import { supplier } from "@krishna-starter-kit/db/schema/commonlot";
+import { supplier } from "@call-e-commonlot/db/schema/commonlot";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 

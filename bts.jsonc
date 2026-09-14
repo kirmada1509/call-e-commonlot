@@ -10,7 +10,7 @@
   "$schema": "https://r2.better-t-stack.dev/schema.json",
   "version": "3.43.0",
   "createdAt": "2026-09-12T13:45:37.139Z",
-  "reproducibleCommand": "bun create better-t-stack@latest krishna-starter-kit --frontend next --backend elysia --runtime bun --database postgres --orm drizzle --api orpc --auth better-auth --payments none --addons turborepo ultracite lefthook evlog skills mcp --examples ai --db-setup docker --web-deploy docker --server-deploy vercel --git --package-manager bun --install",
+  "reproducibleCommand": "bun create better-t-stack@latest call-e-commonlot --frontend next --backend elysia --runtime bun --database postgres --orm drizzle --api orpc --auth better-auth --payments none --addons turborepo ultracite lefthook evlog skills mcp --examples ai --db-setup docker --web-deploy docker --server-deploy vercel --git --package-manager bun --install",
   "database": "postgres",
   "orm": "drizzle",
   "backend": "elysia",

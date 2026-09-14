@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@krishna-starter-kit/ui/components/button";
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { Button } from "@call-e-commonlot/ui/components/button";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller";
 import { ArrowDownIcon } from "lucide-react";
 import type * as React from "react";

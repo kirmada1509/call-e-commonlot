@@ -1,5 +1,5 @@
+import { appRouter } from "@call-e-commonlot/api/routers/index";
 import { cors } from "@elysiajs/cors";
-import { appRouter } from "@krishna-starter-kit/api/routers/index";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
@@ -39,7 +39,7 @@ const apiHandler = new OpenAPIHandler(appRouter, {
 });
 
 initLogger({
-  env: { service: "krishna-starter-kit-server" },
+  env: { service: "call-e-commonlot-server" },
 });
 
 const identifyUser = createAuthMiddleware(auth as BetterAuthInstance, {
@@ -107,7 +107,8 @@ export default app;
 // Elysia's default export is not auto-served by Bun or Node, so start a local
 // server outside Vercel while still exporting the app for Vercel functions.
 if (!process.env.VERCEL) {
-  app.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+  const port = Number(process.env.PORT ?? 3000);
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
   });
 }

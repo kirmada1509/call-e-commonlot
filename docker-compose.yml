@@ -1,4 +1,4 @@
-name: krishna-starter-kit
+name: call-e-commonlot
 
 services:
   web:
@@ -32,15 +32,15 @@ services:
 
   postgres:
     image: postgres:18
-    container_name: krishna-starter-kit-postgres
+    container_name: call-e-commonlot-postgres
     environment:
-      POSTGRES_DB: krishna-starter-kit
+      POSTGRES_DB: call-e-commonlot
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - krishna-starter-kit_postgres_data:/var/lib/postgresql
+      - call-e-commonlot_postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -50,9 +50,9 @@ services:
 
   dozzle:
     image: amir20/dozzle:latest
-    container_name: krishna-starter-kit-dozzle
+    container_name: call-e-commonlot-dozzle
     environment:
-      DOZZLE_FILTER: label=com.docker.compose.project=krishna-starter-kit
+      DOZZLE_FILTER: label=com.docker.compose.project=call-e-commonlot
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
@@ -60,7 +60,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  krishna-starter-kit_postgres_data:
+  call-e-commonlot_postgres_data:
 
 # BuildKit makes these available only while install/build commands run.
 secrets:

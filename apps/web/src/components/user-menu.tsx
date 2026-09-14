@@ -1,4 +1,4 @@
-import { Button } from "@krishna-starter-kit/ui/components/button";
+import { Button } from "@call-e-commonlot/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@krishna-starter-kit/ui/components/dropdown-menu";
-import { Skeleton } from "@krishna-starter-kit/ui/components/skeleton";
+} from "@call-e-commonlot/ui/components/dropdown-menu";
+import { Skeleton } from "@call-e-commonlot/ui/components/skeleton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

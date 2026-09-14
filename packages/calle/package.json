@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/calle",
+  "name": "@call-e-commonlot/calle",
   "type": "module",
   "exports": {
     ".": {
@@ -20,7 +20,7 @@
     "@call-e/calle": "^0.7.0"
   },
   "devDependencies": {
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "typescript": "catalog:"
   }
 }

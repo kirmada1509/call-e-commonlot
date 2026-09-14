@@ -1,6 +1,6 @@
-import { createAuth as createConfiguredAuth } from "@krishna-starter-kit/auth";
-import { createCalleClient } from "@krishna-starter-kit/calle";
-import { createDb, type Database } from "@krishna-starter-kit/db";
+import { createAuth as createConfiguredAuth } from "@call-e-commonlot/auth";
+import { createCalleClient } from "@call-e-commonlot/calle";
+import { createDb, type Database } from "@call-e-commonlot/db";
 
 import { env } from "./env.server";
 

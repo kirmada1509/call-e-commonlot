@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@krishna-starter-kit/ui/components/button";
-import { Input } from "@krishna-starter-kit/ui/components/input";
-import { Textarea } from "@krishna-starter-kit/ui/components/textarea";
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { Button } from "@call-e-commonlot/ui/components/button";
+import { Input } from "@call-e-commonlot/ui/components/input";
+import { Textarea } from "@call-e-commonlot/ui/components/textarea";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 

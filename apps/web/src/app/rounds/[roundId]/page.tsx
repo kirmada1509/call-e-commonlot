@@ -21,8 +21,10 @@ export default async function RoundDetailPage({
   const { roundId } = await params;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6">
-      <RoundDetailView roundId={roundId} />
+    <div className="lg:pl-64">
+      <div className="app-page">
+        <RoundDetailView roundId={roundId} />
+      </div>
     </div>
   );
 }

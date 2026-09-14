@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/auth",
+  "name": "@call-e-commonlot/auth",
   "type": "module",
   "exports": {
     ".": {
@@ -16,12 +16,12 @@
     "check-types": "tsc -b"
   },
   "dependencies": {
-    "@krishna-starter-kit/db": "workspace:*",
+    "@call-e-commonlot/db": "workspace:*",
     "better-auth": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "typescript": "catalog:"
   }
 }

@@ -3,7 +3,7 @@
 Living tracker for the implementation plan in `call-e-commonlot-research.md`. Check items off as they land; keep this file in sync with reality, not with intent.
 
 ## M0 — Bootstrap
-- [x] `krishna-starter-kit-TS` copied into this repo, fresh git init
+- [x] `call-e-commonlot-TS` copied into this repo, fresh git init
 - [x] `bun install`
 - [x] Postgres available locally (Homebrew `postgresql@18`, port 5432 — Docker Desktop wasn't running; see note below) and `db:push` applied
 - [x] `apps/server/.env` / `apps/web/.env` set (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `CORS_ORIGIN`, `NEXT_PUBLIC_SERVER_URL`)

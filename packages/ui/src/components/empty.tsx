@@ -1,4 +1,4 @@
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 function Empty({ className, ...props }: React.ComponentProps<"div">) {

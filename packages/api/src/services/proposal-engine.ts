@@ -3,15 +3,15 @@ import {
   evaluateProposal,
   type ParticipantInput,
   type Tier,
-} from "@krishna-starter-kit/core";
-import type { Database } from "@krishna-starter-kit/db";
+} from "@call-e-commonlot/core";
+import type { Database } from "@call-e-commonlot/db";
 import {
   participantRequest,
   proposal,
   proposalLineItem,
   purchaseRound,
   supplierOffer,
-} from "@krishna-starter-kit/db/schema/commonlot";
+} from "@call-e-commonlot/db/schema/commonlot";
 import { and, desc, eq, isNull } from "drizzle-orm";
 
 export type RequestSource = "call" | "manual";
@@ -150,9 +150,22 @@ export async function recomputeProposal(db: Database, roundId: string) {
     with: { lineItems: true },
   });
 
-  const previousLineItems = previousProposal
+  // Diff against the last *feasible* proposal, not just the immediately
+  // prior version: an infeasible proposal stores null pricing on every line
+  // item, and diffing against nulls would flag every buyer for
+  // reconfirmation (not just the one whose actual terms changed) the moment
+  // the round becomes feasible again.
+  const previousFeasibleProposal = previousProposal?.feasible
+    ? previousProposal
+    : await db.query.proposal.findFirst({
+        orderBy: desc(proposal.version),
+        where: and(eq(proposal.roundId, roundId), eq(proposal.feasible, true)),
+        with: { lineItems: true },
+      });
+
+  const previousLineItems = previousFeasibleProposal
     ? {
-        lineItems: previousProposal.lineItems.map((li) => ({
+        lineItems: previousFeasibleProposal.lineItems.map((li) => ({
           allInUnitPrice: Number(li.allInUnitPrice),
           buyerId: li.buyerId,
           quantity: li.quantity,

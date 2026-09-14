@@ -12,13 +12,15 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@krishna-starter-kit/ui/components",
-    "utils": "@krishna-starter-kit/ui/lib/utils",
-    "hooks": "@krishna-starter-kit/ui/hooks",
-    "lib": "@krishna-starter-kit/ui/lib",
-    "ui": "@krishna-starter-kit/ui/components"
+    "components": "@call-e-commonlot/ui/components",
+    "utils": "@call-e-commonlot/ui/lib/utils",
+    "hooks": "@call-e-commonlot/ui/hooks",
+    "lib": "@call-e-commonlot/ui/lib",
+    "ui": "@call-e-commonlot/ui/components"
   },
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@glass-ui": "https://glass-ui.crenspire.com/r/{name}.json"
+  }
 }

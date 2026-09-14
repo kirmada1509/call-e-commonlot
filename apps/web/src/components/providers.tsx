@@ -1,6 +1,6 @@
 "use client";
 
-import { Toaster } from "@krishna-starter-kit/ui/components/sonner";
+import { Toaster } from "@call-e-commonlot/ui/components/sonner";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 

@@ -1,17 +1,15 @@
 import type { RouterClient } from "@orpc/server";
 
-import { protectedProcedure, publicProcedure } from "../index";
+import { publicProcedure } from "../index";
+import { dashboardRouter } from "./dashboard";
 import { groupsRouter } from "./groups";
 import { roundsRouter } from "./rounds";
 import { suppliersRouter } from "./suppliers";
 
 export const appRouter = {
+  dashboard: dashboardRouter,
   groups: groupsRouter,
   healthCheck: publicProcedure.handler(() => "OK"),
-  privateData: protectedProcedure.handler(({ context }) => ({
-    message: "This is private",
-    user: context.session?.user,
-  })),
   rounds: roundsRouter,
   suppliers: suppliersRouter,
 };

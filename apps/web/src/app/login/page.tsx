@@ -1,16 +1,14 @@
-"use client";
+import type { Metadata } from "next";
 
-import { useState } from "react";
+import LoginView from "./login-view";
 
-import SignInForm from "@/components/sign-in-form";
-import SignUpForm from "@/components/sign-up-form";
+export const metadata: Metadata = { title: "Sign in" };
 
-export default function LoginPage() {
-  const [showSignIn, setShowSignIn] = useState(false);
-
-  return showSignIn ? (
-    <SignInForm onSwitchToSignUp={() => setShowSignIn(false)} />
-  ) : (
-    <SignUpForm onSwitchToSignIn={() => setShowSignIn(true)} />
-  );
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mode?: string }>;
+}) {
+  const { mode } = await searchParams;
+  return <LoginView mode={mode === "sign-up" ? "sign-up" : "sign-in"} />;
 }

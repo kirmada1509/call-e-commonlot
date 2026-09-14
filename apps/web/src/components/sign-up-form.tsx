@@ -1,8 +1,10 @@
-import { Button } from "@krishna-starter-kit/ui/components/button";
-import { Input } from "@krishna-starter-kit/ui/components/input";
-import { Label } from "@krishna-starter-kit/ui/components/label";
+import { Button } from "@call-e-commonlot/ui/components/button";
+import { Input } from "@call-e-commonlot/ui/components/input";
+import { Label } from "@call-e-commonlot/ui/components/label";
 import { useForm } from "@tanstack/react-form";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -17,6 +19,7 @@ export default function SignUpForm({
 }) {
   const router = useRouter();
   const { isPending } = authClient.useSession();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -56,8 +59,13 @@ export default function SignUpForm({
   }
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-md p-6">
-      <h1 className="mb-6 text-center font-bold text-3xl">Create Account</h1>
+    <div>
+      <h1 className="font-semibold text-2xl tracking-tight">
+        Create your account
+      </h1>
+      <p className="mt-1 mb-6 text-muted-foreground text-sm">
+        Set up a private workspace for your buying network.
+      </p>
 
       <form
         className="space-y-4"
@@ -73,6 +81,7 @@ export default function SignUpForm({
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Name</Label>
                 <Input
+                  autoComplete="name"
                   id={field.name}
                   name={field.name}
                   onBlur={field.handleBlur}
@@ -80,7 +89,11 @@ export default function SignUpForm({
                   value={field.state.value}
                 />
                 {field.state.meta.errors.map((error) => (
-                  <p className="text-red-500" key={error?.message}>
+                  <p
+                    className="text-destructive text-xs"
+                    key={error?.message}
+                    role="alert"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -95,6 +108,7 @@ export default function SignUpForm({
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Email</Label>
                 <Input
+                  autoComplete="email"
                   id={field.name}
                   name={field.name}
                   onBlur={field.handleBlur}
@@ -103,7 +117,11 @@ export default function SignUpForm({
                   value={field.state.value}
                 />
                 {field.state.meta.errors.map((error) => (
-                  <p className="text-red-500" key={error?.message}>
+                  <p
+                    className="text-destructive text-xs"
+                    key={error?.message}
+                    role="alert"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -117,16 +135,38 @@ export default function SignUpForm({
             {(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Password</Label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  type="password"
-                  value={field.state.value}
-                />
+                <div className="relative">
+                  <Input
+                    autoComplete="new-password"
+                    className="pr-11"
+                    id={field.name}
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    type={showPassword ? "text" : "password"}
+                    value={field.state.value}
+                  />
+                  <button
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    className="absolute inset-y-0 right-0 grid w-11 place-items-center text-muted-foreground"
+                    onClick={() => setShowPassword((value) => !value)}
+                    type="button"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-4" />
+                    ) : (
+                      <Eye className="size-4" />
+                    )}
+                  </button>
+                </div>
                 {field.state.meta.errors.map((error) => (
-                  <p className="text-red-500" key={error?.message}>
+                  <p
+                    className="text-destructive text-xs"
+                    key={error?.message}
+                    role="alert"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -147,19 +187,15 @@ export default function SignUpForm({
               disabled={!canSubmit || isSubmitting}
               type="submit"
             >
-              {isSubmitting ? "Submitting..." : "Sign Up"}
+              {isSubmitting ? "Creating account…" : "Create account"}
             </Button>
           )}
         </form.Subscribe>
       </form>
 
       <div className="mt-4 text-center">
-        <Button
-          className="text-indigo-600 hover:text-indigo-800"
-          onClick={onSwitchToSignIn}
-          variant="link"
-        >
-          Already have an account? Sign In
+        <Button onClick={onSwitchToSignIn} variant="link">
+          Already have an account? Sign in
         </Button>
       </div>
     </div>

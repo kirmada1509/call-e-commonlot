@@ -1,4 +1,4 @@
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 import type * as React from "react";
 
 function MessageGroup({ className, ...props }: React.ComponentProps<"div">) {

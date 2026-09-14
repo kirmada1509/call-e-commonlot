@@ -3,13 +3,13 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "krishna-starter-kit",
+      "name": "call-e-commonlot",
       "dependencies": {
         "zod": "catalog:",
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.12",
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "@types/bun": "catalog:",
         "@types/node": "catalog:",
         "lefthook": "latest",
@@ -24,11 +24,11 @@
     "apps/server": {
       "name": "server",
       "dependencies": {
+        "@call-e-commonlot/api": "workspace:*",
+        "@call-e-commonlot/auth": "workspace:*",
+        "@call-e-commonlot/calle": "workspace:*",
+        "@call-e-commonlot/db": "workspace:*",
         "@elysiajs/cors": "^1.4.2",
-        "@krishna-starter-kit/api": "workspace:*",
-        "@krishna-starter-kit/auth": "workspace:*",
-        "@krishna-starter-kit/calle": "workspace:*",
-        "@krishna-starter-kit/db": "workspace:*",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",
         "@orpc/zod": "catalog:",
@@ -39,7 +39,7 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "@types/bun": "catalog:",
         "tsdown": "^0.23.0",
         "typescript": "catalog:",
@@ -49,8 +49,8 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
-        "@krishna-starter-kit/api": "workspace:*",
-        "@krishna-starter-kit/ui": "workspace:*",
+        "@call-e-commonlot/api": "workspace:*",
+        "@call-e-commonlot/ui": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/server": "catalog:",
         "@orpc/tanstack-query": "^1.15.0",
@@ -71,9 +71,10 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "@tailwindcss/postcss": "catalog:",
         "@tanstack/react-query-devtools": "^5.102.8",
+        "@types/bun": "catalog:",
         "@types/node": "catalog:",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -82,12 +83,12 @@
       },
     },
     "packages/api": {
-      "name": "@krishna-starter-kit/api",
+      "name": "@call-e-commonlot/api",
       "dependencies": {
-        "@krishna-starter-kit/auth": "workspace:*",
-        "@krishna-starter-kit/calle": "workspace:*",
-        "@krishna-starter-kit/core": "workspace:*",
-        "@krishna-starter-kit/db": "workspace:*",
+        "@call-e-commonlot/auth": "workspace:*",
+        "@call-e-commonlot/calle": "workspace:*",
+        "@call-e-commonlot/core": "workspace:*",
+        "@call-e-commonlot/db": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",
@@ -96,52 +97,52 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "typescript": "catalog:",
       },
     },
     "packages/auth": {
-      "name": "@krishna-starter-kit/auth",
+      "name": "@call-e-commonlot/auth",
       "dependencies": {
-        "@krishna-starter-kit/db": "workspace:*",
+        "@call-e-commonlot/db": "workspace:*",
         "better-auth": "catalog:",
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "typescript": "catalog:",
       },
     },
     "packages/calle": {
-      "name": "@krishna-starter-kit/calle",
+      "name": "@call-e-commonlot/calle",
       "dependencies": {
         "@call-e/calle": "^0.7.0",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "typescript": "catalog:",
       },
     },
     "packages/config": {
-      "name": "@krishna-starter-kit/config",
+      "name": "@call-e-commonlot/config",
       "version": "0.0.0",
     },
     "packages/core": {
-      "name": "@krishna-starter-kit/core",
+      "name": "@call-e-commonlot/core",
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "typescript": "catalog:",
       },
     },
     "packages/db": {
-      "name": "@krishna-starter-kit/db",
+      "name": "@call-e-commonlot/db",
       "dependencies": {
         "drizzle-orm": "^0.45.2",
         "pg": "^8.23.0",
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "@types/pg": "^8.23.1",
         "drizzle-kit": "^0.31.10",
         "typescript": "catalog:",
@@ -149,7 +150,7 @@
       },
     },
     "packages/ui": {
-      "name": "@krishna-starter-kit/ui",
+      "name": "@call-e-commonlot/ui",
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.8.0",
@@ -165,7 +166,7 @@
         "tw-animate-css": "^1.4.0",
       },
       "devDependencies": {
-        "@krishna-starter-kit/config": "workspace:*",
+        "@call-e-commonlot/config": "workspace:*",
         "@tailwindcss/postcss": "catalog:",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -310,6 +311,20 @@
     "@borewit/text-codec": ["@borewit/text-codec@0.2.2", "", {}, "sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ=="],
 
     "@bytecodealliance/preview2-shim": ["@bytecodealliance/preview2-shim@0.17.6", "", {}, "sha512-n3cM88gTen5980UOBAD6xDcNNL3ocTK8keab21bpx1ONdA+ARj7uD1qoFxOWCyKlkpSi195FH+GeAut7Oc6zZw=="],
+
+    "@call-e-commonlot/api": ["@call-e-commonlot/api@workspace:packages/api"],
+
+    "@call-e-commonlot/auth": ["@call-e-commonlot/auth@workspace:packages/auth"],
+
+    "@call-e-commonlot/calle": ["@call-e-commonlot/calle@workspace:packages/calle"],
+
+    "@call-e-commonlot/config": ["@call-e-commonlot/config@workspace:packages/config"],
+
+    "@call-e-commonlot/core": ["@call-e-commonlot/core@workspace:packages/core"],
+
+    "@call-e-commonlot/db": ["@call-e-commonlot/db@workspace:packages/db"],
+
+    "@call-e-commonlot/ui": ["@call-e-commonlot/ui@workspace:packages/ui"],
 
     "@call-e/calle": ["@call-e/calle@0.7.0", "", { "dependencies": { "openapi-fetch": "^0.14.0" }, "bin": { "calle": "dist/cli.js" } }, "sha512-SUOm42SaVvzboBbXlv7d8uGmbpPuQwZIX5rU9nWo5tr+JOgP36P8rfe1AI7ZVbMpLuX88XIxASm2BQ3qfAKyPg=="],
 
@@ -478,20 +493,6 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.6.0", "", {}, "sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
-
-    "@krishna-starter-kit/api": ["@krishna-starter-kit/api@workspace:packages/api"],
-
-    "@krishna-starter-kit/auth": ["@krishna-starter-kit/auth@workspace:packages/auth"],
-
-    "@krishna-starter-kit/calle": ["@krishna-starter-kit/calle@workspace:packages/calle"],
-
-    "@krishna-starter-kit/config": ["@krishna-starter-kit/config@workspace:packages/config"],
-
-    "@krishna-starter-kit/core": ["@krishna-starter-kit/core@workspace:packages/core"],
-
-    "@krishna-starter-kit/db": ["@krishna-starter-kit/db@workspace:packages/db"],
-
-    "@krishna-starter-kit/ui": ["@krishna-starter-kit/ui@workspace:packages/ui"],
 
     "@mapbox/node-pre-gyp": ["@mapbox/node-pre-gyp@2.0.3", "", { "dependencies": { "consola": "^3.2.3", "detect-libc": "^2.0.0", "https-proxy-agent": "^7.0.5", "node-fetch": "^2.6.7", "nopt": "^8.0.0", "semver": "^7.5.3", "tar": "^7.4.0" }, "bin": { "node-pre-gyp": "bin/node-pre-gyp" } }, "sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg=="],
 

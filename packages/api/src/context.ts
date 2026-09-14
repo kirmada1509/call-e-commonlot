@@ -1,6 +1,6 @@
-import type { createAuth } from "@krishna-starter-kit/auth";
-import type { CalleClient } from "@krishna-starter-kit/calle";
-import type { Database } from "@krishna-starter-kit/db";
+import type { createAuth } from "@call-e-commonlot/auth";
+import type { CalleClient } from "@call-e-commonlot/calle";
+import type { Database } from "@call-e-commonlot/db";
 
 export interface Context {
   auth: null;

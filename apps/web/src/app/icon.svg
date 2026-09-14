@@ -1,0 +1,28 @@
+<svg
+  aria-labelledby="title"
+  role="img"
+  viewBox="0 0 64 64"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title id="title">CommonLot</title>
+  <rect fill="#0a84ff" height="64" rx="15" width="64" />
+  <rect fill="white" height="20" rx="6" width="20" x="10" y="10" />
+  <rect
+    fill="white"
+    height="20"
+    opacity=".72"
+    rx="6"
+    width="20"
+    x="34"
+    y="10"
+  />
+  <rect
+    fill="white"
+    height="20"
+    opacity=".46"
+    rx="6"
+    width="20"
+    x="22"
+    y="34"
+  />
+</svg>

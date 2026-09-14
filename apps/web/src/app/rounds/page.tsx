@@ -15,13 +15,10 @@ export default async function RoundsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
-      <h1 className="mb-1 font-semibold text-xl">Purchase rounds</h1>
-      <p className="mb-6 text-muted-foreground text-sm">
-        Each round is one shared purchase: a group of buyers, a supplier, and
-        the proposal CommonLot assembles from their answers.
-      </p>
-      <RoundsView />
+    <div className="lg:pl-64">
+      <div className="app-page">
+        <RoundsView />
+      </div>
     </div>
   );
 }

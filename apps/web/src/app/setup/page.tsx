@@ -15,13 +15,20 @@ export default async function SetupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
-      <h1 className="mb-1 font-semibold text-xl">Groups &amp; suppliers</h1>
-      <p className="mb-6 text-muted-foreground text-sm">
-        Set up the buying group and the supplier before starting a purchase
-        round.
-      </p>
-      <SetupView />
+    <div className="lg:pl-64">
+      <div className="app-page">
+        <div className="mb-8">
+          <p className="font-medium text-primary text-sm">Relationships</p>
+          <h1 className="mt-1 font-semibold text-3xl tracking-tight">
+            Network
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Keep the people and suppliers behind every pooled purchase close at
+            hand.
+          </p>
+        </div>
+        <SetupView />
+      </div>
     </div>
   );
 }

@@ -11,6 +11,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "types": ["bun"],
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "jsx": "react-jsx",
@@ -22,7 +23,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@krishna-starter-kit/ui/*": ["../../packages/ui/src/*"]
+      "@call-e-commonlot/ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": [

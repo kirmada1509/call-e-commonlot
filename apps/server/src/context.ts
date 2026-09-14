@@ -1,4 +1,4 @@
-import type { Context as ApiContext } from "@krishna-starter-kit/api/context";
+import type { Context as ApiContext } from "@call-e-commonlot/api/context";
 import type { Context as ElysiaContext } from "elysia";
 import { auth, calle, getDb } from "./services";
 

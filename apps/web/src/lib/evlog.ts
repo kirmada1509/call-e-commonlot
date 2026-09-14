@@ -4,9 +4,9 @@ import { createInstrumentation } from "evlog/next/instrumentation/create";
 
 export const { withEvlog, useLogger, log, createError } = createEvlog({
   drain: process.env.NODE_ENV === "production" ? undefined : createFsDrain(),
-  service: "krishna-starter-kit-web",
+  service: "call-e-commonlot-web",
 });
 
 export const { register, onRequestError } = createInstrumentation({
-  service: "krishna-starter-kit-web",
+  service: "call-e-commonlot-web",
 });

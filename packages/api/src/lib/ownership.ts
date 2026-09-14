@@ -1,9 +1,9 @@
-import type { Database } from "@krishna-starter-kit/db";
+import type { Database } from "@call-e-commonlot/db";
 import {
   group,
   purchaseRound,
   supplier,
-} from "@krishna-starter-kit/db/schema/commonlot";
+} from "@call-e-commonlot/db/schema/commonlot";
 import { ORPCError } from "@orpc/server";
 import { eq } from "drizzle-orm";
 

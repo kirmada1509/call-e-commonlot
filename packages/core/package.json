@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/core",
+  "name": "@call-e-commonlot/core",
   "type": "module",
   "exports": {
     ".": {
@@ -17,7 +17,7 @@
     "test": "bun test"
   },
   "devDependencies": {
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "typescript": "catalog:"
   }
 }

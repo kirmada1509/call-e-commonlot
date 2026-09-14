@@ -19,6 +19,7 @@
 
 Dockerfile
 **/Dockerfile
+!apps/web/Dockerfile
 docker-compose.yml
 
 # Env value files stay out of COPY layers; runtime env comes from compose env_file,

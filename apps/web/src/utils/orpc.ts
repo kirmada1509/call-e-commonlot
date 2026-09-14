@@ -1,4 +1,4 @@
-import type { AppRouterClient } from "@krishna-starter-kit/api/routers/index";
+import type { AppRouterClient } from "@call-e-commonlot/api/routers/index";
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";

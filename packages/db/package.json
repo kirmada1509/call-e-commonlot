@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/db",
+  "name": "@call-e-commonlot/db",
   "type": "module",
   "exports": {
     ".": {
@@ -27,7 +27,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "@types/pg": "^8.23.1",
     "drizzle-kit": "^0.31.10",
     "typescript": "catalog:",

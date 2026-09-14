@@ -8,7 +8,7 @@ import {
   purchaseRound,
   supplier,
   supplierOffer,
-} from "@krishna-starter-kit/db/schema/commonlot";
+} from "@call-e-commonlot/db/schema/commonlot";
 import { ORPCError } from "@orpc/server";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { z } from "zod";

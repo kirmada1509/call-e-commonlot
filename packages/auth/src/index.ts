@@ -1,4 +1,4 @@
-import type { Database } from "@krishna-starter-kit/db";
+import type { Database } from "@call-e-commonlot/db";
 import {
   account,
   accountRelations,
@@ -7,7 +7,7 @@ import {
   user,
   userRelations,
   verification,
-} from "@krishna-starter-kit/db/schema/auth";
+} from "@call-e-commonlot/db/schema/auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 

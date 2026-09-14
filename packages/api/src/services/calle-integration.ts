@@ -1,19 +1,19 @@
-import type { Call, CalleClient, JsonObject } from "@krishna-starter-kit/calle";
+import type { Call, CalleClient, JsonObject } from "@call-e-commonlot/calle";
 import {
   type BuyerCallPurpose,
   buildBuyerTaskTemplate,
   buildSupplierTaskTemplate,
   type CallPurpose,
   type SupplierCallPurpose,
-} from "@krishna-starter-kit/calle";
-import type { Database } from "@krishna-starter-kit/db";
+} from "@call-e-commonlot/calle";
+import type { Database } from "@call-e-commonlot/db";
 import {
   buyer,
   call,
   proposal,
   purchaseRound,
   supplier,
-} from "@krishna-starter-kit/db/schema/commonlot";
+} from "@call-e-commonlot/db/schema/commonlot";
 import { and, desc, eq, inArray } from "drizzle-orm";
 
 import {

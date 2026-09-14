@@ -66,3 +66,6 @@ temp
 
 # Local dev process state (scripts/{start,stop,status,logs}.sh)
 .runtime/
+
+# Locally rendered hackathon video and voice-over masters
+output/

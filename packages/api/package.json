@@ -1,5 +1,5 @@
 {
-  "name": "@krishna-starter-kit/api",
+  "name": "@call-e-commonlot/api",
   "type": "module",
   "exports": {
     ".": {
@@ -14,13 +14,14 @@
   "scripts": {
     "build": "tsc -b",
     "check-types": "tsc -b",
-    "dev": "tsc -b --watch"
+    "dev": "tsc -b --watch",
+    "test": "bun test"
   },
   "dependencies": {
-    "@krishna-starter-kit/auth": "workspace:*",
-    "@krishna-starter-kit/calle": "workspace:*",
-    "@krishna-starter-kit/core": "workspace:*",
-    "@krishna-starter-kit/db": "workspace:*",
+    "@call-e-commonlot/auth": "workspace:*",
+    "@call-e-commonlot/calle": "workspace:*",
+    "@call-e-commonlot/core": "workspace:*",
+    "@call-e-commonlot/db": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -29,7 +30,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "typescript": "catalog:"
   }
 }

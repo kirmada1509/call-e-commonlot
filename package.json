@@ -1,5 +1,5 @@
 {
-  "name": "krishna-starter-kit",
+  "name": "call-e-commonlot",
   "private": true,
   "type": "module",
   "workspaces": {
@@ -36,12 +36,12 @@
     "check": "ultracite check",
     "check-types": "turbo run check-types",
     "db:down": "docker compose down postgres",
-    "db:generate": "turbo run db:generate -F @krishna-starter-kit/db --",
-    "db:migrate": "turbo run db:migrate -F @krishna-starter-kit/db --",
-    "db:push": "turbo run db:push -F @krishna-starter-kit/db --",
+    "db:generate": "turbo run db:generate -F @call-e-commonlot/db --",
+    "db:migrate": "turbo run db:migrate -F @call-e-commonlot/db --",
+    "db:push": "turbo run db:push -F @call-e-commonlot/db --",
     "db:start": "docker compose up -d postgres",
     "db:stop": "docker compose stop postgres",
-    "db:studio": "turbo run db:studio -F @krishna-starter-kit/db --",
+    "db:studio": "turbo run db:studio -F @call-e-commonlot/db --",
     "db:watch": "docker compose up postgres",
     "deploy": "vercel deploy",
     "deploy:check": "vercel deploy --dry",
@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
-    "@krishna-starter-kit/config": "workspace:*",
+    "@call-e-commonlot/config": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
     "lefthook": "latest",

@@ -25,6 +25,13 @@ else
   done
 fi
 
+echo "==> dozzle"
+if dozzle_running; then
+  echo "    already running"
+else
+  docker compose -f "$ROOT_DIR/docker-compose.yml" up -d dozzle
+fi
+
 for name in "${SERVICES[@]}"; do
   echo "==> ${name}"
   if pid=$(running_pid "$name"); then

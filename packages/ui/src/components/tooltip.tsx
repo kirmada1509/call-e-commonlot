@@ -1,7 +1,7 @@
 "use client";
 
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
-import { cn } from "@krishna-starter-kit/ui/lib/utils";
+import { cn } from "@call-e-commonlot/ui/lib/utils";
 
 function TooltipProvider({
   delay = 0,

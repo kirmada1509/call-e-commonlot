@@ -1,24 +1,43 @@
 "use client";
 
-import { Button } from "@krishna-starter-kit/ui/components/button";
+import { Badge } from "@call-e-commonlot/ui/components/badge";
+import { Button } from "@call-e-commonlot/ui/components/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@krishna-starter-kit/ui/components/card";
-import { Checkbox } from "@krishna-starter-kit/ui/components/checkbox";
-import { Input } from "@krishna-starter-kit/ui/components/input";
+} from "@call-e-commonlot/ui/components/card";
+import { Input } from "@call-e-commonlot/ui/components/input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Check,
+  History,
+  LayoutList,
+  Phone,
+  Radio,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { orpc } from "@/utils/orpc";
+
+const currency = new Intl.NumberFormat("en-IN", {
+  currency: "INR",
+  style: "currency",
+});
+const dateTime = new Intl.DateTimeFormat("en-IN", {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
 
 function formatMoney(value: string | number | null | undefined) {
   if (value === null || value === undefined) {
     return "—";
   }
-  return `₹${Number(value).toLocaleString("en-IN")}`;
+  return currency.format(Number(value));
 }
 
 type RoundDetail = NonNullable<
@@ -103,9 +122,14 @@ function CallActivityItem({ call }: { call: Call }) {
         ) : null}
       </div>
       {call.structuredResult ? (
-        <pre className="overflow-x-auto bg-muted/50 p-1.5 text-[11px]">
-          {JSON.stringify(call.structuredResult)}
-        </pre>
+        <details className="rounded-lg bg-muted/50 p-2">
+          <summary className="cursor-pointer font-medium">
+            Structured result
+          </summary>
+          <pre className="mt-2 overflow-x-auto whitespace-pre-wrap text-[11px]">
+            {JSON.stringify(call.structuredResult, null, 2)}
+          </pre>
+        </details>
       ) : null}
       {transcript.length > 0 && (
         <div>
@@ -149,6 +173,7 @@ function BuyerCallForm({
     "buyer_intake"
   );
   const [dryRun, setDryRun] = useState(true);
+  const [liveConfirmed, setLiveConfirmed] = useState(false);
   const [quantity, setQuantity] = useState("");
   const [maxUnitPrice, setMaxUnitPrice] = useState("");
   const [maxTotal, setMaxTotal] = useState("");
@@ -162,12 +187,22 @@ function BuyerCallForm({
       },
     })
   );
+  let submitLabel = "Review & place live call";
+  if (dryRun) {
+    submitLabel = "Run simulation";
+  }
+  if (trigger.isPending) {
+    submitLabel = "Starting…";
+  }
 
   return (
     <form
       className="space-y-2 border-t pt-2"
       onSubmit={(e) => {
         e.preventDefault();
+        if (!(dryRun || liveConfirmed)) {
+          return;
+        }
         trigger.mutate({
           buyerId,
           dryRun,
@@ -185,7 +220,7 @@ function BuyerCallForm({
     >
       <div className="flex flex-wrap items-center gap-2">
         <select
-          className="h-7 rounded-none border border-input bg-transparent px-1.5 text-xs"
+          className="h-9 rounded-lg border border-input bg-card px-2.5 text-xs"
           onChange={(e) => setPurpose(e.target.value as typeof purpose)}
           value={purpose}
         >
@@ -194,17 +229,30 @@ function BuyerCallForm({
             Reconfirm call
           </option>
         </select>
-        <label
-          className="flex items-center gap-1.5 text-xs"
-          htmlFor={`${buyerId}-dry-run`}
+        <fieldset
+          aria-label="Call mode"
+          className="flex rounded-lg bg-muted p-0.5"
         >
-          <Checkbox
-            checked={dryRun}
-            id={`${buyerId}-dry-run`}
-            onCheckedChange={(checked) => setDryRun(checked === true)}
-          />
-          Dry run (no real call)
-        </label>
+          <Button
+            onClick={() => {
+              setDryRun(true);
+              setLiveConfirmed(false);
+            }}
+            size="xs"
+            type="button"
+            variant={dryRun ? "outline" : "ghost"}
+          >
+            Simulation
+          </Button>
+          <Button
+            onClick={() => setDryRun(false)}
+            size="xs"
+            type="button"
+            variant={dryRun ? "ghost" : "outline"}
+          >
+            Live call
+          </Button>
+        </fieldset>
       </div>
       {dryRun ? (
         <div className="grid grid-cols-3 gap-1.5">
@@ -231,8 +279,26 @@ function BuyerCallForm({
           />
         </div>
       ) : null}
-      <Button disabled={trigger.isPending} size="sm" type="submit">
-        {trigger.isPending ? "Placing call..." : "Place call"}
+      {dryRun ? null : (
+        <div className="rounded-lg bg-warning/10 p-2 text-warning text-xs">
+          <Radio className="mr-1 inline size-3" />
+          Live mode will call the buyer’s saved number for the selected purpose.
+          <label className="mt-2 flex items-center gap-2 font-medium text-foreground">
+            <input
+              checked={liveConfirmed}
+              onChange={(event) => setLiveConfirmed(event.target.checked)}
+              type="checkbox"
+            />
+            I have reviewed the target and purpose
+          </label>
+        </div>
+      )}
+      <Button
+        disabled={trigger.isPending || !(dryRun || liveConfirmed)}
+        size="sm"
+        type="submit"
+      >
+        {submitLabel}
       </Button>
     </form>
   );
@@ -354,6 +420,7 @@ function SupplierCallForm({
     "supplier_quote" | "supplier_reconfirm"
   >("supplier_quote");
   const [dryRun, setDryRun] = useState(true);
+  const [liveConfirmed, setLiveConfirmed] = useState(false);
   const [minQty, setMinQty] = useState("");
   const [pricePerUnit, setPricePerUnit] = useState("");
   const [collectionWindow, setCollectionWindow] = useState("");
@@ -368,12 +435,22 @@ function SupplierCallForm({
       },
     })
   );
+  let submitLabel = "Review & place live call";
+  if (dryRun) {
+    submitLabel = "Run simulation";
+  }
+  if (trigger.isPending) {
+    submitLabel = "Starting…";
+  }
 
   return (
     <form
       className="space-y-2 border-t pt-2"
       onSubmit={(e) => {
         e.preventDefault();
+        if (!(dryRun || liveConfirmed)) {
+          return;
+        }
         trigger.mutate({
           dryRun,
           purpose,
@@ -396,7 +473,7 @@ function SupplierCallForm({
     >
       <div className="flex flex-wrap items-center gap-2">
         <select
-          className="h-7 rounded-none border border-input bg-transparent px-1.5 text-xs"
+          className="h-9 rounded-lg border border-input bg-card px-2.5 text-xs"
           onChange={(e) => setPurpose(e.target.value as typeof purpose)}
           value={purpose}
         >
@@ -405,17 +482,30 @@ function SupplierCallForm({
             Reconfirm call
           </option>
         </select>
-        <label
-          className="flex items-center gap-1.5 text-xs"
-          htmlFor="supplier-dry-run"
+        <fieldset
+          aria-label="Call mode"
+          className="flex rounded-lg bg-muted p-0.5"
         >
-          <Checkbox
-            checked={dryRun}
-            id="supplier-dry-run"
-            onCheckedChange={(checked) => setDryRun(checked === true)}
-          />
-          Dry run (no real call)
-        </label>
+          <Button
+            onClick={() => {
+              setDryRun(true);
+              setLiveConfirmed(false);
+            }}
+            size="xs"
+            type="button"
+            variant={dryRun ? "outline" : "ghost"}
+          >
+            Simulation
+          </Button>
+          <Button
+            onClick={() => setDryRun(false)}
+            size="xs"
+            type="button"
+            variant={dryRun ? "ghost" : "outline"}
+          >
+            Live call
+          </Button>
+        </fieldset>
       </div>
       {dryRun ? (
         <div className="grid grid-cols-2 gap-1.5">
@@ -447,8 +537,26 @@ function SupplierCallForm({
           />
         </div>
       ) : null}
-      <Button disabled={trigger.isPending} size="sm" type="submit">
-        {trigger.isPending ? "Placing call..." : "Place call"}
+      {dryRun ? null : (
+        <div className="rounded-lg bg-warning/10 p-2 text-warning text-xs">
+          <Radio className="mr-1 inline size-3" />
+          Live mode will call the supplier’s saved number. You’ll confirm once
+          <label className="mt-2 flex items-center gap-2 font-medium text-foreground">
+            <input
+              checked={liveConfirmed}
+              onChange={(event) => setLiveConfirmed(event.target.checked)}
+              type="checkbox"
+            />
+            I have reviewed the target and purpose
+          </label>
+        </div>
+      )}
+      <Button
+        disabled={trigger.isPending || !(dryRun || liveConfirmed)}
+        size="sm"
+        type="submit"
+      >
+        {submitLabel}
       </Button>
     </form>
   );
@@ -516,11 +624,11 @@ function SupplierCard({
 function ProposalPanel({ proposal }: { proposal: RoundDetail["proposal"] }) {
   if (!proposal) {
     return (
-      <Card>
+      <Card className="border-dashed bg-card/60">
         <CardHeader>
           <CardTitle>Proposal</CardTitle>
         </CardHeader>
-        <CardContent className="text-muted-foreground text-xs">
+        <CardContent className="pb-7 text-muted-foreground text-sm">
           No proposal yet — collect at least one buyer request and a supplier
           offer.
         </CardContent>
@@ -529,12 +637,15 @@ function ProposalPanel({ proposal }: { proposal: RoundDetail["proposal"] }) {
   }
 
   return (
-    <Card>
+    <Card className="overflow-hidden border-primary/20 shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Proposal</span>
+          <span className="flex items-center gap-2">
+            <Sparkles className="size-5 text-primary" />
+            Proposal spotlight
+          </span>
           <span
-            className={`px-2 py-0.5 font-medium text-xs ${
+            className={`rounded-full px-2.5 py-1 font-medium text-xs ${
               proposal.feasible
                 ? proposalStatusStyle[proposal.status]
                 : proposalStatusStyle.infeasible
@@ -544,28 +655,46 @@ function ProposalPanel({ proposal }: { proposal: RoundDetail["proposal"] }) {
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-1 text-xs">
-        <p>Combined quantity: {proposal.combinedQty}</p>
-        {proposal.feasible ? (
-          <>
-            <p>
-              All-in price: {formatMoney(proposal.allInUnitPrice)}/unit (tier
-              reached at {proposal.tierMinQty})
+      <CardContent className="pb-7">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-muted/55 p-4">
+            <p className="text-muted-foreground text-xs">Combined quantity</p>
+            <p className="mt-1 font-semibold text-2xl text-tabular">
+              {proposal.combinedQty}
             </p>
-            <p>Total cost: {formatMoney(proposal.totalCost)}</p>
-            {proposal.savings !== null && (
-              <p className="text-green-800">
-                Estimated savings vs. baseline: {formatMoney(proposal.savings)}
-              </p>
-            )}
-          </>
-        ) : (
-          <p className="text-red-700">
-            {proposal.shortfall === null
-              ? "At least one buyer's total exceeds their authorized cap."
-              : `Needs ${proposal.shortfall} more units to reach the next supplier tier.`}
-          </p>
-        )}
+          </div>
+          {proposal.feasible ? (
+            <>
+              <div className="rounded-xl bg-muted/55 p-4">
+                <p className="text-muted-foreground text-xs">All-in price</p>
+                <p className="mt-1 font-semibold text-2xl text-tabular">
+                  {formatMoney(proposal.allInUnitPrice)}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  Tier at {proposal.tierMinQty} units
+                </p>
+              </div>
+              <div className="rounded-xl bg-muted/55 p-4">
+                <p className="text-muted-foreground text-xs">Total cost</p>
+                <p className="mt-1 font-semibold text-2xl text-tabular">
+                  {formatMoney(proposal.totalCost)}
+                </p>
+              </div>
+              {proposal.savings !== null && (
+                <p className="rounded-xl bg-success/10 p-3 font-medium text-sm text-success sm:col-span-3">
+                  Estimated saving against baseline:{" "}
+                  {formatMoney(proposal.savings)}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="rounded-xl bg-destructive/10 p-4 text-destructive text-sm sm:col-span-2">
+              {proposal.shortfall === null
+                ? "At least one buyer's total exceeds their authorized cap."
+                : `Needs ${proposal.shortfall} more units to reach the next supplier tier.`}
+            </p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
@@ -580,10 +709,14 @@ function OrderStatusStepper({
 }) {
   const queryClient = useQueryClient();
   const [note, setNote] = useState("");
+  const [pendingStatus, setPendingStatus] = useState<
+    (typeof orderStatusValues)[number] | null
+  >(null);
   const record = useMutation(
     orpc.rounds.recordOrderStatus.mutationOptions({
       onSuccess: () => {
         setNote("");
+        setPendingStatus(null);
         queryClient.invalidateQueries({
           queryKey: orpc.rounds.get.queryKey({ input: { roundId } }),
         });
@@ -606,34 +739,90 @@ function OrderStatusStepper({
           This is a manual, organizer-only ledger — separate from the proposal's
           feasibility status.
         </p>
-        <div className="flex flex-wrap gap-1.5">
+        <ol className="grid gap-3 sm:grid-cols-4">
           {orderStatusValues.map((status) => (
-            <Button
-              disabled={record.isPending}
-              key={status}
-              onClick={() =>
-                record.mutate({ note: note || undefined, roundId, status })
-              }
-              size="sm"
-              variant={current === status ? "default" : "outline"}
-            >
-              {orderStatusLabel[status]}
-            </Button>
+            <li className="flex items-center gap-2 sm:block" key={status}>
+              <span
+                className={`grid size-7 shrink-0 place-items-center rounded-full ${current === status ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              >
+                {current === status ? (
+                  <Check className="size-4" />
+                ) : (
+                  orderStatusValues.indexOf(status) + 1
+                )}
+              </span>
+              <span className="mt-2 block text-xs">
+                {orderStatusLabel[status]}
+              </span>
+            </li>
           ))}
-        </div>
+        </ol>
         <Input
           className="max-w-sm"
           onChange={(e) => setNote(e.target.value)}
           placeholder="Optional note"
           value={note}
         />
+        <div className="flex flex-wrap gap-2">
+          {orderStatusValues.map((status) => (
+            <Button
+              disabled={record.isPending || current === status}
+              key={status}
+              onClick={() => {
+                const consequential =
+                  status === "order_placed" || status === "goods_received";
+                if (consequential) {
+                  setPendingStatus(status);
+                } else {
+                  record.mutate({ note: note || undefined, roundId, status });
+                }
+              }}
+              size="sm"
+              variant="outline"
+            >
+              Mark {orderStatusLabel[status]}
+            </Button>
+          ))}
+        </div>
+        {pendingStatus ? (
+          <div className="rounded-xl border border-warning/30 bg-warning/10 p-3">
+            <p className="font-medium text-sm">
+              Confirm {orderStatusLabel[pendingStatus]}
+            </p>
+            <p className="mt-1 text-muted-foreground text-xs">
+              This consequential change will be added to the permanent organizer
+              timeline.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <Button
+                onClick={() =>
+                  record.mutate({
+                    note: note || undefined,
+                    roundId,
+                    status: pendingStatus,
+                  })
+                }
+                size="sm"
+              >
+                Confirm change
+              </Button>
+              <Button
+                onClick={() => setPendingStatus(null)}
+                size="sm"
+                variant="ghost"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : null}
         {orderEvents.length > 0 && (
           <ul className="space-y-1 border-t pt-2">
             {orderEvents.map((event) => (
               <li className="text-muted-foreground" key={event.id}>
                 {orderStatusLabel[event.status]}
                 {event.note ? ` — ${event.note}` : ""} (
-                {new Date(event.createdAt).toLocaleString()})
+                {dateTime.format(new Date(event.createdAt))})
               </li>
             ))}
           </ul>
@@ -643,7 +832,85 @@ function OrderStatusStepper({
   );
 }
 
+function ParticipantOverview({
+  buyers,
+  requests,
+  proposal,
+}: {
+  buyers: Buyer[];
+  requests: RoundDetail["requests"];
+  proposal: RoundDetail["proposal"];
+}) {
+  const requestByBuyer = new Map(requests.map((item) => [item.buyerId, item]));
+  const lineByBuyer = new Map(
+    (proposal?.lineItems ?? []).map((item) => [item.buyerId, item])
+  );
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Participant readiness</CardTitle>
+      </CardHeader>
+      <CardContent className="overflow-x-auto">
+        <table className="w-full min-w-[620px] text-left text-sm">
+          <thead>
+            <tr className="border-b text-muted-foreground">
+              <th className="pb-3 font-medium">Buyer</th>
+              <th className="pb-3 font-medium">Requested</th>
+              <th className="pb-3 font-medium">Proposal</th>
+              <th className="pb-3 font-medium">Readiness</th>
+            </tr>
+          </thead>
+          <tbody>
+            {buyers.map((buyer) => {
+              const request = requestByBuyer.get(buyer.id);
+              const line = lineByBuyer.get(buyer.id);
+              const needsConfirmation =
+                line?.requiresReconfirmation && !line.confirmed;
+              let readiness = "Awaiting intake";
+              if (request) {
+                readiness = "Ready";
+              }
+              if (needsConfirmation) {
+                readiness = "Reconfirmation needed";
+              }
+              return (
+                <tr className="border-b last:border-0" key={buyer.id}>
+                  <td className="py-4">
+                    <p className="font-medium">{buyer.businessName}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {buyer.contactName ?? buyer.phone}
+                    </p>
+                  </td>
+                  <td className="py-4 text-tabular">
+                    {request
+                      ? `${request.quantity} · ${formatMoney(request.maxUnitPrice)}/unit`
+                      : "Not collected"}
+                  </td>
+                  <td className="py-4 text-tabular">
+                    {line
+                      ? `${line.quantity} · ${formatMoney(line.totalCost)}`
+                      : "—"}
+                  </td>
+                  <td className="py-4">
+                    <Badge variant="outline">{readiness}</Badge>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function RoundDetailView({ roundId }: { roundId: string }) {
+  const searchParams = useSearchParams();
+  const requestedView = searchParams.get("view");
+  const view =
+    requestedView === "calls" || requestedView === "order"
+      ? requestedView
+      : "overview";
   const round = useQuery(
     orpc.rounds.get.queryOptions({
       input: { roundId },
@@ -675,49 +942,140 @@ export default function RoundDetailView({ roundId }: { roundId: string }) {
   );
   const requestByBuyer = new Map(requests.map((req) => [req.buyerId, req]));
 
+  const views = [
+    { icon: LayoutList, label: "Overview", value: "overview" },
+    { icon: Phone, label: "Calls", value: "calls" },
+    { icon: History, label: "Order", value: "order" },
+  ] as const;
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-semibold text-xl">{r.productName}</h1>
-        <p className="text-muted-foreground text-sm">
-          {group?.name} · handling fee {formatMoney(r.handlingFeePerUnit)}/
-          {r.unitLabel}
-          {r.baselineUnitPrice
-            ? ` · baseline ${formatMoney(r.baselineUnitPrice)}/${r.unitLabel}`
-            : ""}
-        </p>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <Link
+            className="text-muted-foreground text-sm hover:text-foreground"
+            href="/rounds"
+          >
+            Rounds /
+          </Link>
+          <h1 className="mt-1 font-semibold text-3xl tracking-tight">
+            {r.productName}
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            {group?.name} · handling fee {formatMoney(r.handlingFeePerUnit)}/
+            {r.unitLabel}
+            {r.baselineUnitPrice
+              ? ` · baseline ${formatMoney(r.baselineUnitPrice)}/${r.unitLabel}`
+              : ""}
+          </p>
+        </div>
+        <Badge variant="outline">{r.status}</Badge>
       </div>
 
       <ProposalPanel proposal={proposal} />
 
-      <div className="space-y-3">
-        <h2 className="font-medium text-sm">Buyers</h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {group?.buyers.map((buyer) => (
-            <BuyerCard
-              buyer={buyer}
-              calls={calls}
-              key={buyer.id}
-              lineItem={lineItemByBuyer.get(buyer.id)}
-              request={requestByBuyer.get(buyer.id)}
-              roundId={roundId}
-            />
-          ))}
+      <nav
+        aria-label="Round views"
+        className="flex w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1 sm:w-fit"
+      >
+        {views.map(({ icon: Icon, label, value }) => (
+          <Link
+            aria-current={view === value ? "page" : undefined}
+            className={`flex min-h-10 items-center gap-2 rounded-lg px-4 text-sm ${view === value ? "bg-card font-medium shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            href={`/rounds/${roundId}?view=${value}`}
+            key={value}
+          >
+            <Icon className="size-4" />
+            {label}
+          </Link>
+        ))}
+      </nav>
+
+      {view === "overview" ? (
+        <div className="space-y-6">
+          <ParticipantOverview
+            buyers={group?.buyers ?? []}
+            proposal={proposal}
+            requests={requests}
+          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Supplier terms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {offer ? (
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div>
+                    <p className="text-muted-foreground text-xs">Supplier</p>
+                    <p className="mt-1 font-medium">{supplier?.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground text-xs">
+                      Best available tier
+                    </p>
+                    <p className="mt-1 font-medium text-tabular">
+                      {offer.tiers[0]?.minQty ?? "—"}+ at{" "}
+                      {formatMoney(offer.tiers[0]?.pricePerUnit)}/unit
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground text-xs">Collection</p>
+                    <p className="mt-1 font-medium">
+                      {offer.collectionWindow ?? "Not specified"}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  No supplier offer collected yet. Open Calls to simulate or
+                  place a quote call.
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      ) : null}
 
-      <div className="space-y-3">
-        <h2 className="font-medium text-sm">Supplier</h2>
-        <SupplierCard
-          calls={calls}
-          hasProposal={Boolean(proposal)}
-          offer={offer}
-          roundId={roundId}
-          supplier={supplier}
-        />
-      </div>
+      {view === "calls" ? (
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-primary/20 bg-primary/[.035] p-4">
+            <h2 className="font-semibold">Conversation controls</h2>
+            <p className="mt-1 text-muted-foreground text-sm">
+              Simulation is the safe default. Live calls always show the target
+              and require final confirmation.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-medium text-sm">Buyers</h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {group?.buyers.map((buyer) => (
+                <BuyerCard
+                  buyer={buyer}
+                  calls={calls}
+                  key={buyer.id}
+                  lineItem={lineItemByBuyer.get(buyer.id)}
+                  request={requestByBuyer.get(buyer.id)}
+                  roundId={roundId}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-medium text-sm">Supplier</h2>
+            <SupplierCard
+              calls={calls}
+              hasProposal={Boolean(proposal)}
+              offer={offer}
+              roundId={roundId}
+              supplier={supplier}
+            />
+          </div>
+        </div>
+      ) : null}
 
-      <OrderStatusStepper orderEvents={orderEvents} roundId={roundId} />
+      {view === "order" ? (
+        <OrderStatusStepper orderEvents={orderEvents} roundId={roundId} />
+      ) : null}
     </div>
   );
 }

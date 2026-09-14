@@ -13,8 +13,8 @@
   "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",
-    "utils": "@krishna-starter-kit/ui/lib/utils",
-    "ui": "@krishna-starter-kit/ui/components",
+    "utils": "@call-e-commonlot/ui/lib/utils",
+    "ui": "@call-e-commonlot/ui/components",
     "lib": "@/lib",
     "hooks": "@/hooks"
   },

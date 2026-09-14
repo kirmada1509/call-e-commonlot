@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@krishna-starter-kit/ui/components/button";
+import { Button } from "@call-e-commonlot/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@krishna-starter-kit/ui/components/dropdown-menu";
+} from "@call-e-commonlot/ui/components/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
