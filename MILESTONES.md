@@ -59,6 +59,7 @@ Living tracker for the implementation plan in `call-e-commonlot-research.md`. Ch
 - [ ] **Blocked**: the deployed server function crashes on every request with a bare `ResolveMessage {}` (Bun's own module-resolution error class, no further detail even via `vercel logs --json`) — reproduced with both `src/index.ts` (Vercel's own bundler) and our own built `apps/server/dist/index.mjs` as the entrypoint. The `dist/index.mjs` case is the more suspicious one: it's committed to git for Vercel's pre-build entrypoint-existence check (see `.gitignore`/`.vercelignore` exceptions), and is the *exact* build verified working locally under a simulated Vercel runtime — something in Vercel's actual packaging of it still differs in a way local reproduction hasn't caught. Handed off to the user to continue in the Vercel dashboard, where fuller error output may be visible than the CLI surfaces.
 - [ ] Prod env incl. `CALLE_API_KEY` (already set on the Vercel project, along with `DATABASE_URL`/`BETTER_AUTH_SECRET`/the `__VARLOCK_ENV` blob — see above)
 - [ ] Live URL smoke test
+- [x] Self-hosted production stack live at https://commonlot.duckdns.org with HTTPS, isolated Postgres/API/web containers, and the public `/about` presentation
 - [ ] `web` Vercel project (not yet created — blocked behind getting `server` stable first)
 - [ ] <3 min demo video
 - [ ] Project description written

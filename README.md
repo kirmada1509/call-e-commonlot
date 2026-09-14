@@ -4,6 +4,8 @@ CommonLot is an organizer-controlled purchasing workspace that turns phone-call 
 
 The demo follows three fictional buyers requesting 12, 10, and 8 cartons. Together they reach a supplier's 30-carton price tier. If one buyer drops to 6, CommonLot withdraws the stale result; if another raises their quantity, the proposal stays blocked until their higher spending ceiling is explicitly reconfirmed.
 
+[Open CommonLot](https://commonlot.duckdns.org) · [View the presentation](https://commonlot.duckdns.org/about)
+
 ## What it demonstrates
 
 - Structured buyer intake and supplier quote calls through CALL-E.
@@ -75,7 +77,7 @@ bun run build
 
 ## Deployment
 
-The API can run on Railway or Vercel; the web app can run on Railway or Vercel. `vercel.json` describes the API service, `vercel.web.json` describes the web build, and `apps/web/Dockerfile` provides the Railway web image. Keep all credentials in platform-managed environment variables—never commit `.env` files.
+The API and web app can run on Railway or Vercel. A self-hosted production stack is also defined in `docker-compose.prod.yml`. `vercel.json` describes the API service, `vercel.web.json` describes the web build, and the app Dockerfiles support container deployment. Keep all credentials in platform-managed environment variables—never commit `.env` files.
 
 ## License
 
